@@ -1,24 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import { Remarkable } from 'remarkable';
 
 function App() {
+  const initial_state = {
+    value: "Enter *Markdown* code..."
+  }
+
+  let [input_value, set_input_value] = useState(initial_state);
+
+  const raw = () => {
+    const markdown_render = new Remarkable();
+    return {__html: markdown_render.render(input_value.value)}
+  }
+
+  const change_input = (e) => {
+    set_input_value({value:e.target.value})
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+     <div className="input_box">
+      <h2>Input box</h2>
+      <textarea onChange={change_input} defaultValue={input_value.value} className="input_box_text"/>
+     </div>
+     <div className="output_box">
+      <h2>Output box</h2>
+      <div 
+      dangerouslySetInnerHTML={raw()}
+      className="output_box_text"
+      ></div>
+     </div>
     </div>
   );
 }
